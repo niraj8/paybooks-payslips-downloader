@@ -1,5 +1,5 @@
 const {
-    openBrowser, client, goto, waitFor, textBox, link, into, write, click, $, closeBrowser, goBack, screenshot
+    openBrowser, client, goto, waitFor, textBox, link, into, write, click, $, closeBrowser, goBack
 } = require('taiko');
 const path = require('path');
 const fs = require('fs');
@@ -9,7 +9,6 @@ class MonthPayslipSummaryPage {
     DOWNLOAD_ICON_SELECTOR = `//i[contains(@class, 'fa-download')]`;
 
     async download(downloadPath, filename) {
-        await screenshot()
         await click($(this.DOWNLOAD_ICON_SELECTOR), {waitForNavigation: true});
         // TODO can we do something so that we don't have to wait for 2 seconds to make sure the file is downloaded
         await waitFor(2000);
@@ -65,10 +64,18 @@ class PayslipsListPage {
             const tmp = await links.elements();
             await click(tmp[i], {waitForNavigation: true});
             await waitFor(500);
-            const monthYear = await monthYearList[i].text();
-            await new MonthPayslipSummaryPage().download(downloadPath, monthYear);
+            const monthYearText = await monthYearList[i].text();
+            const monthYear = monthYearText.split("-");
+            await new MonthPayslipSummaryPage().download(downloadPath, `${monthYear[1]}-${monthNameToNumber(monthYear[0])}`);
         }
     }
+}
+
+function monthNameToNumber(monthName) {
+    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const number = months.indexOf(monthName) + 1;
+    if (number < 10) return `0${number}` ;
+    return number;
 }
 
 class Paybooks {
