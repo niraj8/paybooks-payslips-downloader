@@ -1,6 +1,8 @@
 # Paybooks Payslips downloader
 
-Downloads Payslips from Paybooks.
+Downloads Payslips from Paybooks. 
+
+This script opens a Chromium browser and automates user actions to download and save the payslips.
 
 > 60% of the time, it works every time.
 
